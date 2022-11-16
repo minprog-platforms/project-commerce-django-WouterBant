@@ -1,0 +1,73 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="container">
+        {% if message %}
+            {% if accepted %}
+                <div class="alert alert-success" role="alert">{{ message }}</div>
+                {% else %}
+                <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% if user == data.price.user %}
+        <div class="alert alert-success" role="alert">
+            Congratulations you won the auction
+        </div>
+    {% endif %}
+    <div class="row">
+        {% if not data.active and user.is_authenticated and data.active %}
+            {% if isOwner %}
+                <form action="{% url 'closeAuction' id=data.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">close</button>
+                </form>
+            {% endif %}
+            {% if watchlist %}
+                <form action="{% url 'removeWatchlist' title=data.title %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Remove item from the watchlist</button>
+                </form>
+            {% else %}
+                <form action="{% url 'addWatchlist' title=data.title %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Add item to the watchlist</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+    <h2>{{ data.title }}</h2>
+    <img style="width: 18rem;" src="{{ data.image }}">
+    <br>
+    <p> {{ data.description }} </p>
+    <p> Owner: {{ data.owner }}</p>
+    <h5> Current price: {{ data.price }}</h5>
+    {% if user.is_authenticated %}
+            <form action="{% url 'addBid' id=data.id %}" method="POST">
+                {% csrf_token %}
+                <input type="number" min="0" name="newBid" placeholder="Add a Bid">
+                <button type="submit" class="btn btn-primary">Post</button>
+            </form>
+    {% endif %}
+    <p>{{ message }}</p>
+
+    <div class="row mx-3">
+        <h2>Comments</h2>
+        {% if user.is_authenticated %}
+            <form action="{% url 'addComment' id=data.id %}" method="POST">
+                {% csrf_token %}
+                <input type="text" name="newComment" placeholder="Add a comment">
+                <button type="submit" class="btn btn-primary">Post</button>
+            </form>
+        {% endif %}
+    </div>
+    <ul class="list-group">
+        {% for comment in allComments %}
+            <li class="list-group-item"> 
+                {{ comment.message }}
+                <br>
+                <p>Wrote: {{ comment.author }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

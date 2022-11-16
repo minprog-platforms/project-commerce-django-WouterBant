@@ -1,19 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
-    <form action="{% url 'display_category' %}" method="POST">
-        {% csrf_token %}
-        <select class="form-select" aria-label="Default select example" name="category">
-            <option value="" disabled selected hidden>Select a category</option>
-            {% for c in cats %}
-                <option>{{ c }}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <button type="submit" class="btn btn-primary">Filter</button>
-    </form>
-    <br><br>
+    <h2>Watchlist</h2>
     {% for l in list %}
         <div class="container">
             <div class="card" style="width: 18rem;">
