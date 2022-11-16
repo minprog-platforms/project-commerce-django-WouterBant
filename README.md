@@ -1,8 +1,9 @@
 # Application Name
 
-TODO: Describe your application here.
+E-commerce website with django
 
 
 ## Getting Started
 
-TODO: Describe steps to install requirements and get the application running.
+pip3 install django
+python manage.py runserver
